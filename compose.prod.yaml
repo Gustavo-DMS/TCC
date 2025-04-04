@@ -1,0 +1,41 @@
+services:
+  server:
+    image: ghcr.io/gustavo-dms/teste-docker:v2
+    environment:
+      NODE_ENV: production
+      DATABASE_URL_DOCKER: postgres://postgres:HpA8TrLTN7eG4k@db:5432/mydb
+    ports:
+      - 3000:3000
+    deploy:
+      update_config:
+        order: start-first
+    depends_on:
+      - db
+
+  db:
+    image: ghcr.io/gustavo-dms/teste-docker-db:v1
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=mydb
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      update_config:
+        order: start-first
+
+volumes:
+  db-data:
+
+secrets:
+  db-password:
+    external: true
