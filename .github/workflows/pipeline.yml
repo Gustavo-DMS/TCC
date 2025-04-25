@@ -25,6 +25,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          file: db.Dockerfile
           push: true
           tags: |
             ghcr.io/gustavodms/tcc-db:latest
@@ -33,7 +34,8 @@ jobs:
       - name: Build and push Docker front
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./frontend
+          file: prod.Dockerfile
           push: true
           tags: |
             ghcr.io/gustavodms/tcc-front:latest
@@ -42,7 +44,8 @@ jobs:
       - name: Build and push Docker image backend
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ./backend
+          file: flask.Dockerfile
           push: true
           tags: |
             ghcr.io/gustavodms/tcc-backend:latest
