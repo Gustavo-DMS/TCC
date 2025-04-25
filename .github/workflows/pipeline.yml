@@ -1,0 +1,72 @@
+name: pipeline
+on:
+  push:
+    branches:
+      - "main"
+
+permissions:
+  packages: write
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v3
+        with:
+          registry: https://ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT }}
+
+      - name: Build and push Docker db
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/gustavodms/tcc-db:latest
+            ghcr.io/gustavodms/tcc-db:${{ github.sha }}
+
+      - name: Build and push Docker front
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/gustavodms/tcc-front:latest
+            ghcr.io/gustavodms/tcc-front:${{ github.sha }}
+
+      - name: Build and push Docker image backend
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/gustavodms/tcc-backend:latest
+            ghcr.io/gustavodms/tcc-backend:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs:
+      - build-and-push-image
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: create env file
+        run: |
+          echo "GIT_COMMIT_HASH=${{ github.sha }}" >> ./envfile
+
+      - name: Docker Stack Deploy
+        uses: cssnr/stack-deploy-action@v1
+        with:
+          name: TCC
+          file: compose.prod.yaml
+          host: ${{ secrets.SSH_HOST }}
+          user: ${{ secrets.SSH_USER }}
+          ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          env_file: ./envfile

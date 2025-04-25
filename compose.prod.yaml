@@ -1,11 +1,14 @@
 services:
-  server:
-    image: ghcr.io/gustavo-dms/teste-docker:v2
+  frontend:
+    image: ghcr.io/gustavo-dms/tcc-front:${GIT_COMMIT_HASH:-latest}
+    secrets:
+      - db-password
     environment:
       NODE_ENV: production
-      DATABASE_URL_DOCKER: postgres://postgres:HpA8TrLTN7eG4k@db:5432/mydb
+      DATABASE_PASSWORD: /run/secrets/db-password
+      DATABASE_URL_DOCKER: postgres://postgres:${DATABASE_PASSWORD}@db:5432/mydb
     ports:
-      - 3000:3000
+      - 3001:3000
     deploy:
       update_config:
         order: start-first
@@ -13,7 +16,7 @@ services:
       - db
 
   db:
-    image: ghcr.io/gustavo-dms/teste-docker-db:v1
+    image: ghcr.io/gustavo-dms/tcc-db:${GIT_COMMIT_HASH:-latest}
     user: postgres
     secrets:
       - db-password
@@ -23,15 +26,31 @@ services:
       - POSTGRES_DB=mydb
       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
     ports:
-      - 5432:5432
+      - 5433:5432
     healthcheck:
       test: ["CMD", "pg_isready"]
       interval: 10s
       timeout: 5s
       retries: 5
-    deploy:
-      update_config:
-        order: start-first
+
+  backend:
+    image: ghcr.io/gustavo-dms/tcc-backend:${GIT_COMMIT_HASH:-latest}
+    secrets:
+      - db-password
+    ports:
+      - 4000:4000
+    environment:
+      - DATABASE_PASSWORD=/run/secrets/db-password
+      - DATABASE_URL_DOCKER=postgres://postgres:${DATABASE_PASSWORD}@db:5432/mydb
+      - FLASK_DEBUG=1
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=teste@teste.com.br
+      - PGADMIN_DEFAULT_PASSWORD=Teste123
+    ports:
+      - 16543:80
 
 volumes:
   db-data:
