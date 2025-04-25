@@ -9,6 +9,8 @@ services:
       DATABASE_URL_DOCKER: postgres://postgres:${DATABASE_PASSWORD}@db:5432/mydb
     ports:
       - 3001:3000
+    env_file:
+      - .env
     deploy:
       update_config:
         order: start-first
@@ -39,6 +41,8 @@ services:
       - db-password
     ports:
       - 4000:4000
+    env_file:
+      - .env
     environment:
       - DATABASE_PASSWORD=/run/secrets/db-password
       - DATABASE_URL_DOCKER=postgres://postgres:${DATABASE_PASSWORD}@db:5432/mydb
