@@ -28,8 +28,8 @@ jobs:
           file: db.Dockerfile
           push: true
           tags: |
-            ghcr.io/gustavodms/tcc-db:latest
-            ghcr.io/gustavodms/tcc-db:${{ github.sha }}
+            ghcr.io/gustavo-dms/tcc-db:latest
+            ghcr.io/gustavo-dms/tcc-db:${{ github.sha }}
 
       - name: Build and push Docker front
         uses: docker/build-push-action@v6
@@ -38,8 +38,8 @@ jobs:
           file: prod.Dockerfile
           push: true
           tags: |
-            ghcr.io/gustavodms/tcc-front:latest
-            ghcr.io/gustavodms/tcc-front:${{ github.sha }}
+            ghcr.io/gustavo-dms/tcc-front:latest
+            ghcr.io/gustavo-dms/tcc-front:${{ github.sha }}
 
       - name: Build and push Docker image backend
         uses: docker/build-push-action@v6
@@ -48,8 +48,8 @@ jobs:
           file: flask.Dockerfile
           push: true
           tags: |
-            ghcr.io/gustavodms/tcc-backend:latest
-            ghcr.io/gustavodms/tcc-backend:${{ github.sha }}
+            ghcr.io/gustavo-dms/tcc-backend:latest
+            ghcr.io/gustavo-dms/tcc-backend:${{ github.sha }}
 
   deploy:
     runs-on: ubuntu-latest
