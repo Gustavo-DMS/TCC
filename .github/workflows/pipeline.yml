@@ -34,8 +34,8 @@ jobs:
       - name: Build and push Docker front
         uses: docker/build-push-action@v6
         with:
-          context: ./frontend
-          file: prod.Dockerfile
+          context: frontend
+          file: frontend/prod.Dockerfile
           push: true
           tags: |
             ghcr.io/gustavo-dms/tcc-front:latest
@@ -44,8 +44,8 @@ jobs:
       - name: Build and push Docker image backend
         uses: docker/build-push-action@v6
         with:
-          context: ./backend
-          file: flask.Dockerfile
+          context: backend
+          file: backend/flask.Dockerfile
           push: true
           tags: |
             ghcr.io/gustavo-dms/tcc-backend:latest
