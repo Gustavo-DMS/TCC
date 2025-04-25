@@ -27,15 +27,17 @@ COPY . .
 # Next.js collects completely anonymous telemetry data about general usage.
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
-# ENV NEXT_TELEMETRY_DISABLED 1
+ENV NEXT_TELEMETRY_DISABLED 1
 
 # Build Next.js based on the preferred package manager
-RUN \
-  if [ -f yarn.lock ]; then yarn build; \
-  elif [ -f package-lock.json ]; then npm run build; \
-  elif [ -f pnpm-lock.yaml ]; then pnpm build; \
-  else npm run build; \
-  fi
+# RUN \
+#   if [ -f yarn.lock ]; then yarn build; \
+#   elif [ -f package-lock.json ]; then npm run build; \
+#   elif [ -f pnpm-lock.yaml ]; then pnpm build; \
+#   else npm run build; \
+#   fi
+
+RUN pnpm build
 
 # Production image, copy all the files and run next
 FROM base AS runner
