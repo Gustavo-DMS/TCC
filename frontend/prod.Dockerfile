@@ -37,7 +37,8 @@ ENV NEXT_TELEMETRY_DISABLED 1
 #   else npm run build; \
 #   fi
 
-RUN pnpm build
+RUN npm install -g corepack@latest
+RUN corepack enable pnpm && pnpm build
 
 # Production image, copy all the files and run next
 FROM base AS runner
