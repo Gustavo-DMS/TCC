@@ -40,6 +40,8 @@ jobs:
           tags: |
             ghcr.io/gustavo-dms/tcc-front:latest
             ghcr.io/gustavo-dms/tcc-front:${{ github.sha }}
+          secrets: |
+            DATABASE_URL=${{ secret.DATABASE_URL}}
 
       - name: Build and push Docker image backend
         uses: docker/build-push-action@v6
@@ -50,6 +52,8 @@ jobs:
           tags: |
             ghcr.io/gustavo-dms/tcc-backend:latest
             ghcr.io/gustavo-dms/tcc-backend:${{ github.sha }}
+          secrets: |
+            DATABASE_URL=${{ secret.DATABASE_URL}}
 
   deploy:
     runs-on: ubuntu-latest

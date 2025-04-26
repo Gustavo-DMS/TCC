@@ -26,34 +26,33 @@ services:
     env_file:
       - .env
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/postgres
       - FLASK_DEBUG=1
 
-  db:
-    build:
-      context: .
-      dockerfile: db.Dockerfile
-    restart: always
-    user: postgres
-    secrets:
-      - db-password
-    env_file:
-      - .env
-    volumes:
-      - db-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=mydb
-      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-    ports:
-      - 5432:5432
-    healthcheck:
-      test: ["CMD", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+  # db:
+  #   build:
+  #     context: .
+  #     dockerfile: db.Dockerfile
+  #   restart: always
+  #   user: postgres
+  #   secrets:
+  #     - db-password
+  #   env_file:
+  #     - .env
+  #   volumes:
+  #     - db-data:/var/lib/postgresql/data
+  #   environment:
+  #     - POSTGRES_DB=mydb
+  #     - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+  #   ports:
+  #     - 5432:5432
+  #   healthcheck:
+  #     test: ["CMD", "pg_isready"]
+  #     interval: 10s
+  #     timeout: 5s
+  #     retries: 5
 
-volumes:
-  db-data:
+# volumes:
+#   db-data:
 
 secrets:
   db-password:
