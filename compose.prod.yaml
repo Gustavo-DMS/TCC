@@ -33,12 +33,12 @@ services:
     image: ghcr.io/gustavo-dms/tcc-backend:${GIT_COMMIT_HASH:-latest}
     secrets:
       - db-password
+      - db-url
     ports:
       - 4000:4000
     environment:
+      - DATABASE_URL=/run/secrets/db-url
       - DATABASE_PASSWORD=/run/secrets/db-password
-      - DATABASE_URL=postgres://postgres:${DATABASE_PASSWORD}@db:5432/mydb
-      - FLASK_DEBUG=1
 
   pgadmin:
     image: dpage/pgadmin4
@@ -53,4 +53,6 @@ volumes:
 
 secrets:
   db-password:
+    external: true
+  db-url:
     external: true
