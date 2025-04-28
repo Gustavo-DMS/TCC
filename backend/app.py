@@ -6,12 +6,14 @@ app = Flask(__name__)
 
 
 def manage_sensitive(name):
-    secret_fpath = f"/run/secrets/{name}"
+    var = environ.get(name)
     if environ.get("FLASK_DEBUG") == "1":
-        return environ.get(name)
+        return var
 
-    v2 = open(secret_fpath).read().rstrip("\n")
-    return v2
+    if var is None:
+        raise ValueError(f"Environment variable {name} not set")
+
+    return open(var).read().rstrip("\n")
 
 
 @app.route("/")
