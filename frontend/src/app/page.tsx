@@ -1,18 +1,21 @@
-export const dynamic = "force-dynamic";
-export default async function Home() {
-  const fds = await fetch("http://backend:4000/");
-  const data = await fds.json();
-  console.log(data);
+import Funcoes from "@/components/Funcoes";
+import { auth } from "../../auth";
+import { Package2 } from "lucide-react";
 
-  return (
-    <div className="grid gap-16 justify-items-center items-center p-8 pb-20 min-h-screen sm:p-20 grid-rows-[20px_1fr_20px] font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col row-start-2 items-center sm:items-start gap-[32px]">
-        <h1 className="text-4xl font-bold text-center">
-          {data.teste.map((item: any, idx: number) => {
-            return <p key={idx}>{item[1]}</p>;
-          })}
-        </h1>
-      </main>
-    </div>
-  );
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+    // const session = await auth();
+
+    return (
+        <main className="flex flex-col flex-grow mx-5 my-20 bg-[#456ca6] rounded-lg p-10">
+            <div>
+                <h1 className="text-2xl">Bem-vindo,William</h1>
+                <h2 className="text-xl">Selecione a função que deseja acessar</h2>
+                <Funcoes link="teste">
+                    <Package2 color="black" />
+                </Funcoes>
+            </div>
+        </main>
+    );
 }

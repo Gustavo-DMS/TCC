@@ -1,26 +1,23 @@
 from flask import Flask
-from os import environ
+from funcoes.auth import auth
 import psycopg
 
+from utils.utils import manage_sensitive
+
 app = Flask(__name__)
-
-
-def manage_sensitive(name):
-    var = environ.get(name)
-    if environ.get("FLASK_DEBUG") == "1":
-        return var
-
-    if var is None:
-        raise ValueError(f"Environment variable {name} not set")
-
-    return open(var).read().rstrip("\n")
 
 
 @app.route("/")
 def hello_geek():
     sql_result = ""
-    with psycopg.connect(manage_sensitive("DATABASE_URL")) as conn:
+    database_url = manage_sensitive("DATABASE_URL")
+    if database_url is None:
+        raise ValueError("DATABASE_URL not set")
+    with psycopg.connect(database_url) as conn:
         with conn.cursor() as cur:
             cur.execute("SELECT * FROM tb_paciente")
             sql_result = cur.fetchall()
     return {"teste": sql_result}, 200
+
+
+app.register_blueprint(auth)

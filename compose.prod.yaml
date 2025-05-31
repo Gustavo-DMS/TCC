@@ -47,9 +47,12 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=Teste123
     ports:
       - 16543:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
 
 volumes:
   db-data:
+  pgadmin-data:
 
 secrets:
   db-password:
