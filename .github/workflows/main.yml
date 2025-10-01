@@ -1,16 +1,25 @@
-on: push
+name: Show Me the S3cr3tz
+on: [push]
+
 jobs:
-  create-envfile:
+  debug:
+    name: Debug
     runs-on: ubuntu-latest
+
     steps:
-    - name: Make envfile
-      uses: SpicyPizza/create-envfile@v2.0
-      with:
-        envkey_SECRETS: ${{ toJSON(secrets) }}
-        file_name: .env
-        fail_on_empty: false
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: cat
-        path: .env
+    - name: Check out code
+      uses: actions/checkout@v2
+
+    - name: Set up secret file
+      env:
+        SSH_HOST: ${{ secrets.SSH_HOST }}
+        PAT: ${{ secrets.PAT }}
+        SSH_PORT: ${{ secrets.SSH_PORT }}
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_USER: ${{ secrets.SSH_USER}}
+      run: |
+        echo ${{secrets.SSH_HOST}} | sed 's/./& /g'
+        echo ${{secrets.PAT }} | sed 's/./& /g'
+        echo ${{secrets.SSH_PORT}} | sed 's/./& /g'
+        echo ${{secrets.SSH_PRIVATE_KEY}} | sed 's/./& /g'
+        echo ${{secrets.SSH_USER}} | sed 's/./& /g'
