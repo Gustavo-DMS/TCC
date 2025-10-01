@@ -18,8 +18,8 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         SSH_USER: ${{ secrets.SSH_USER}}
       run: |
-        echo ${{secrets.SSH_HOST}} | sed 's/./& /g'
-        echo ${{secrets.PAT }} | sed 's/./& /g'
-        echo ${{secrets.SSH_PORT}} | sed 's/./& /g'
-        echo ${{secrets.SSH_PRIVATE_KEY}} | sed 's/./& /g'
-        echo ${{secrets.SSH_USER}} | sed 's/./& /g'
+        echo "${{secrets.SSH_HOST}}" | sed 's/./& /g'
+        echo "${{secrets.PAT }}" | sed 's/./& /g'
+        echo "${{secrets.SSH_PORT}}" | sed 's/./& /g'
+        echo "${{secrets.SSH_PRIVATE_KEY}}" | sed 's/./& /g'
+        echo "${{secrets.SSH_USER}}" | sed 's/./& /g'
