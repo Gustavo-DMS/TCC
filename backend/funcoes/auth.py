@@ -12,7 +12,7 @@ auth = Blueprint("auth", __name__)
 def teste():
     body = request.get_data()
     body = json.loads(body)
-    user = fetch_db("SELECT * FROM tb_paciente WHERE email = %s", (body["email"],))
+    user = fetch_db("SELECT * FROM tb_funcionario WHERE email = %s", (body["email"],))
 
     if len(user) == 0:
         return jsonify({"erro": "Usuário não encontrado"}), 404

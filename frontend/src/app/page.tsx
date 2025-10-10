@@ -1,21 +1,52 @@
 import Funcoes from "@/components/Funcoes";
 import { auth } from "../../auth";
-import { Package2 } from "lucide-react";
+import {
+  Activity,
+  BedSingle,
+  Binoculars,
+  CircleDollarSign,
+  FileClock,
+  NotebookPen,
+  Package2,
+} from "lucide-react";
+import { Breadcrumb, BreadcrumbCustom } from "@/components/Breadcrumb";
 
-export const dynamic = "force-dynamic";
+// export const dynamic = "force-dynamic";
 
 export default async function Home() {
-    // const session = await auth();
+  // const session = await auth();
 
-    return (
-        <main className="flex flex-col flex-grow mx-5 my-20 bg-[#456ca6] rounded-lg p-10">
-            <div>
-                <h1 className="text-2xl">Bem-vindo,William</h1>
-                <h2 className="text-xl">Selecione a função que deseja acessar</h2>
-                <Funcoes link="teste">
-                    <Package2 color="black" />
-                </Funcoes>
-            </div>
-        </main>
-    );
+  return (
+    <main className="flex grow flex-col">
+      <BreadcrumbCustom />
+      <div className="flex flex-col flex-grow mx-5 my-20 rounded-4xl p-10 bg-[#456ca6]/[var(--bg-opacity)] [--bg-opacity:70%] ">
+        <div>
+          <span className="flex flex-col mb-10 text-white">
+            <h1 className="text-2xl">Bem-vindo,William</h1>
+            <h2 className="text-xl">Selecione a função que deseja acessar</h2>
+          </span>
+          <div className="grid grid-rows-3 gap-10 grid-flow-col">
+            <Funcoes link="cadastroFarmaco" text="Cadastro de Fármacos">
+              <NotebookPen color="black" size={35} />
+            </Funcoes>
+            <Funcoes link="saidaMedicamentos" text="Saída de Medicamentos">
+              <Package2 color="black" size={35} />
+            </Funcoes>
+            <Funcoes link="cadastroPaciente" text="Entrada de Pacientes">
+              <Activity color="black" size={35} />
+            </Funcoes>
+            <Funcoes link="fds" text="Monitoramento de Estoque">
+              <Binoculars color="black" size={35} />
+            </Funcoes>
+            <Funcoes link="fds" text="Histórico do Paciente">
+              <FileClock color="black" size={35} />
+            </Funcoes>
+            <Funcoes link="fds" text="Custos operacionais">
+              <CircleDollarSign color="black" size={35} />
+            </Funcoes>
+          </div>
+        </div>
+      </div>
+    </main>
+  );
 }

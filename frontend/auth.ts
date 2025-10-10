@@ -1,7 +1,7 @@
-import NextAuth, { DefaultSession } from "next-auth";
+import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
 type typeUsuario = {
   nome: string;
@@ -26,8 +26,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        email: { type: "email", label: "Email" },
-        senha: { type: "password", label: "Senha" },
+        email: {},
+        senha: {},
       },
 
       authorize: async (credentials) => {
@@ -46,14 +46,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         const getUser = await res.json();
+        console.log("getUser", getUser[0]);
+        console.log("credentials.senha", credentials.senha);
+        console.log("senha banco", getUser[0].senha);
 
         if (
-          (await bcrypt.compare(getUser.email, credentials.senha as string)) &&
+          (await bcrypt.compare(
+            credentials.senha as string,
+            getUser[0].senha,
+          )) &&
           !getUser.erro
         ) {
-          const { senha, ...resto } = getUser;
+          const { senha, ...resto } = getUser[0];
           user = resto;
 
+          console.log("ajui");
           // return user object with their profile data
           return user as any;
         } else {
@@ -78,5 +85,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token.id;
       return session;
     },
+    authorized: async ({ auth }) => {
+      // Logged in users are authenticated, otherwise redirect to login page
+      return !!auth;
+    },
+  },
+  pages: {
+    signIn: "/auth/login",
   },
 });

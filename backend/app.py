@@ -1,23 +1,25 @@
-from flask import Flask
+from flask import Flask, request
+from flask_cors import CORS
+from werkzeug.datastructures import headers
+from funcoes.saida_medicamentos import saida_medicamentos
+from funcoes.cadastro_farmacos import cadastro_farmacos
+from funcoes.cadastro_pacientes import cadastro_pacientes
 from funcoes.auth import auth
-import psycopg
-
-from utils.utils import manage_sensitive
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/")
 def hello_geek():
-    sql_result = ""
-    database_url = manage_sensitive("DATABASE_URL")
-    if database_url is None:
-        raise ValueError("DATABASE_URL not set")
-    with psycopg.connect(database_url) as conn:
-        with conn.cursor() as cur:
-            cur.execute("SELECT * FROM tb_paciente")
-            sql_result = cur.fetchall()
-    return {"teste": sql_result}, 200
+    data = {}
+    for i in request.headers.keys():
+        data[i] = request.headers.get(i)
+
+    return {"teste": data}, 200
 
 
 app.register_blueprint(auth)
+app.register_blueprint(cadastro_pacientes)
+app.register_blueprint(cadastro_farmacos)
+app.register_blueprint(saida_medicamentos)
