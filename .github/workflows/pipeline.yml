@@ -73,4 +73,5 @@ jobs:
           user: ${{ secrets.SSH_USER }}
           ssh_key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
+          registry_auth: true
           env_file: ./envfile
