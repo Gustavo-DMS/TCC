@@ -1,5 +1,3 @@
-import { FormCadastro } from "@/components/cadastroPacientes/FormCadastro";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default async function Page() {

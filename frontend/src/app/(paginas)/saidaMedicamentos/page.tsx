@@ -1,10 +1,5 @@
-import { ExampleCombobox } from "@/components/Combobox";
-import Quantidade from "@/components/Quantidade";
 import SaidaMedicamento from "@/components/saidaMedicamento/SaidaMedicamento";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Package2 } from "lucide-react";
-import { toast } from "sonner";
 
 export default async function Home() {
   const req = await fetch("http://backend:4000/saidaMedicamentos");

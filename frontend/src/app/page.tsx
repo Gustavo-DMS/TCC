@@ -1,5 +1,4 @@
 import Funcoes from "@/components/Funcoes";
-import { auth } from "../../auth";
 import {
   Activity,
   BedSingle,
@@ -9,7 +8,7 @@ import {
   NotebookPen,
   Package2,
 } from "lucide-react";
-import { Breadcrumb, BreadcrumbCustom } from "@/components/Breadcrumb";
+import { BreadcrumbCustom } from "@/components/Breadcrumb";
 
 // export const dynamic = "force-dynamic";
 
