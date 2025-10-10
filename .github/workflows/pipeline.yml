@@ -19,7 +19,7 @@ jobs:
         with:
           registry: https://ghcr.io
           username: gustavo-dms
-          password: ${{ secrets.PAT }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push Docker db
         uses: docker/build-push-action@v6
