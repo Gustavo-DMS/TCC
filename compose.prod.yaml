@@ -3,7 +3,7 @@ services:
     image: ghcr.io/gustavo-dms/tcc-front:${GIT_COMMIT_HASH:-latest}
     environment:
       NODE_ENV: production
-      AUTH_TRUST_HOST: true
+      AUTH_TRUST_HOST: 1
       AUTH_SECRET: RByw/uPDRceFerQV91wnmet/pBo+44jb3eVz3bXvlv4=
     ports:
       - 3001:3000
@@ -41,6 +41,9 @@ services:
     environment:
       - DATABASE_URL=/run/secrets/db-url
       - DATABASE_PASSWORD=/run/secrets/db-password
+    deploy:
+      update_config:
+        order: start-first
 
   pgadmin:
     image: dpage/pgadmin4
