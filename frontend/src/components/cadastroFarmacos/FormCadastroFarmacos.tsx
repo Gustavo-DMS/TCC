@@ -10,6 +10,7 @@ import React, { useEffect, useState } from "react";
 import { Label } from "../ui/label";
 import ButtonSubmit from "../ButtonSubmit";
 import { Input } from "../ui/input";
+import { fetchAPIs } from "@/lib/utils";
 
 const schema = z.object({
   farmaco: z.number({ message: "Selecione um medicamento" }).min(1),
@@ -37,13 +38,17 @@ export function FormCadastroFarmacos({
   });
 
   const onSuccess = async (data: schema) => {
-    const insert = await fetch("http://localhost:4000/cadastroFarmacos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const insert = await fetchAPIs(
+      "/cadastroFarmacos",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+      true,
+    );
 
     if (insert.ok) {
       toast.success("Dados enviados com sucesso!");

@@ -3,6 +3,8 @@ services:
     image: ghcr.io/gustavo-dms/tcc-front:${GIT_COMMIT_HASH:-latest}
     environment:
       NODE_ENV: production
+      AUTH_TRUST_HOST: true
+      AUTH_SECRET: RByw/uPDRceFerQV91wnmet/pBo+44jb3eVz3bXvlv4=
     ports:
       - 3001:3000
     deploy:

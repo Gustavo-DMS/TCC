@@ -60,7 +60,7 @@ def resgatar_controle():
     conn = psycopg.connect(database_url, row_factory=dict_row)
     cur = conn.cursor()
     paciente_leitos = cur.execute(
-        "SELECT * FROM vw_pacientes_leitos WHERE ativo is true"
+        "SELECT * FROM vw_historico_pacientes_leitos WHERE ativo is true"
     ).fetchall()
     print(paciente_leitos)
     return jsonify({"data": paciente_leitos}), 200

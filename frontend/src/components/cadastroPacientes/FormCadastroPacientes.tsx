@@ -6,6 +6,7 @@ import ButtonSubmit from "../ButtonSubmit";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { fetchAPIs } from "@/lib/utils";
 
 const schema = z.object({
   leito: z.number({ message: "Selecione um leito" }).min(1),
@@ -20,13 +21,17 @@ export function FormCadastro({ data }: { data: CadastroPaciente }) {
   });
 
   const onSuccess = async (data: schema) => {
-    const insert = await fetch("http://localhost:4000/cadastroPaciente", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const insert = await fetchAPIs(
+      "/cadastroPaciente",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+      true,
+    );
 
     if (insert.ok) {
       toast.success("Dados enviados com sucesso!");

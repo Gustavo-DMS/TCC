@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import ButtonSubmit from "../ButtonSubmit";
 import { useSession } from "next-auth/react";
+import { fetchAPIs } from "@/lib/utils";
 
 const schema = z.object({
   medicamento: z.coerce.number({ message: "Medicamento inválido" }),
@@ -75,8 +76,10 @@ export default function SaidaMedicamento({
 
   useEffect(() => {
     const fetchMedicamentos = async () => {
-      const res = await fetch(
-        `http://localhost:4000/saidaMedicamentos/caixa?id=${inputValue || "0"}`,
+      const res = await fetchAPIs(
+        `/saidaMedicamentos/caixa?id=${inputValue || "0"}`,
+        {},
+        true,
       );
       const medicamentos = await res.json();
       console.log(medicamentos);
@@ -111,13 +114,17 @@ export default function SaidaMedicamento({
       return;
     }
 
-    const insert = await fetch("http://localhost:4000/saidaMedicamentos", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const insert = await fetchAPIs(
+      "/saidaMedicamentos",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
       },
-      body: JSON.stringify(data),
-    });
+      true,
+    );
 
     if (insert.ok) {
       toast.success("Dados enviados com sucesso!");

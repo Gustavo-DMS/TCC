@@ -6,6 +6,7 @@ import {
 import ButtonSubmit from "@/components/ButtonSubmit";
 import { openPdfAndPrint } from "@/components/cadastroFarmacos/FormCadastroFarmacos";
 import { DataTableForm } from "@/components/tabela/data-table-form";
+import { fetchAPIs } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -27,8 +28,8 @@ export default function FormControlePacientes({
   });
 
   const onSuccess = async (data: schema) => {
-    const insert = await fetch(
-      "http://localhost:4000/cadastroPaciente/controle",
+    const insert = await fetchAPIs(
+      "/cadastroPaciente/controle",
       {
         method: "POST",
         headers: {
@@ -36,6 +37,7 @@ export default function FormControlePacientes({
         },
         body: JSON.stringify(data),
       },
+      true,
     );
 
     if (insert.ok) {

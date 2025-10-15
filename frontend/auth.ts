@@ -2,6 +2,7 @@ import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { JWT } from "next-auth/jwt";
 import bcrypt from "bcryptjs";
+import { fetchAPIs } from "@/lib/utils";
 
 type typeUsuario = {
   nome: string;
@@ -33,17 +34,21 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         console.log("credentials", credentials);
         let user = null;
-        const res = await fetch(`http://backend:4000/auth`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const res = await fetchAPIs(
+          `/auth`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: credentials.email,
+              senha: credentials.senha,
+            }),
+            cache: "no-cache",
           },
-          body: JSON.stringify({
-            email: credentials.email,
-            senha: credentials.senha,
-          }),
-          cache: "no-cache",
-        });
+          true,
+        );
 
         const getUser = await res.json();
         console.log("getUser", getUser[0]);
