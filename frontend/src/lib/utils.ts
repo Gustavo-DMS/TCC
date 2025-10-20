@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { futimes } from "fs";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -28,12 +29,23 @@ export async function fetchAPIs(
   });
 }
 
+export function dataBRL(dateString: string, onlyDate = false): string {
+  const date = new Date(dateString);
+  return date.toLocaleString("pt-BR", {
+    dateStyle: "long",
+    timeStyle: onlyDate ? undefined : "short",
+    timeZone: "GMT",
+  });
+}
 const dev = process.env.NODE_ENV !== "production";
+const server = typeof window === "undefined";
 
 export const fetchURL = dev
   ? "http://localhost:3000"
   : `https://tcc-site.gustavodms.com.br`;
 
 export const fetchURLExternal = dev
-  ? "http://localhost:4000"
+  ? server
+    ? "http://backend:4000"
+    : "http://localhost:4000"
   : "https://tcc-back.gustavodms.com.br";

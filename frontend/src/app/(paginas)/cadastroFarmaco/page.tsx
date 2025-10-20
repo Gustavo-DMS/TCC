@@ -1,13 +1,12 @@
-import { FormCadastroFarmacos } from "@/components/cadastroFarmacos/FormCadastroFarmacos";
 import { NotebookPen } from "lucide-react";
+import { Suspense } from "react";
+import FetchFarmFarmacos from "./FetchCadastroFarmaco";
+import Loading from "@/components/loading";
 
 export default async function Home() {
-  const req = await fetch("http://backend:4000/cadastroFarmacos");
-  const farmacos = await req.json();
-
   return (
-    <main>
-      <div className="flex flex-row items-center gap-5">
+    <main className="flex flex-col border-green-500 h-full">
+      <div className="flex flex-row items-center gap-5 ">
         <div className="bg-white rounded-full w-20 h-20 flex justify-center items-center shadow-white shadow">
           <NotebookPen color="black" size={50} />
         </div>
@@ -15,7 +14,9 @@ export default async function Home() {
           Cadastro de fármacos
         </p>
       </div>
-      <FormCadastroFarmacos farmacos={farmacos["farmacos"]} />
+      <Suspense fallback={<Loading />}>
+        <FetchFarmFarmacos />
+      </Suspense>
     </main>
   );
 }

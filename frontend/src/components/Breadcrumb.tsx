@@ -12,14 +12,17 @@ import React from "react";
 
 function camelCaseToWords(s: string) {
   const result = s.replace(/([A-Z])/g, " $1");
-  return result.charAt(0).toUpperCase() + result.slice(1);
+  var parcial = result.charAt(0).toUpperCase() + result.slice(1);
+  parcial = parcial.replace("Farmaco", "Fármaco");
+  parcial = parcial.replace("Saida", "Saída");
+  return parcial;
 }
 
 export function BreadcrumbCustom() {
-  const router = usePathname();
+  var router = usePathname();
   const routeItems = router.split("/");
   return (
-    <Breadcrumb className="text-black text-lg">
+    <Breadcrumb className="text-black text-lg p-5 px-7 absolute">
       <BreadcrumbList>
         <BreadcrumbItem>
           <BreadcrumbLink href="/" className="text-white text-lg">

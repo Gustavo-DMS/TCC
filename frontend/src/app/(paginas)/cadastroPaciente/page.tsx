@@ -5,16 +5,16 @@ export default async function Page() {
     <div className="flex gap-4 h-full items-center justify-center">
       <Link
         className="bg-blue-400 w-1/2 h-3/5 items-center justify-center flex rounded-lg text-white font-bold hover:bg-blue-500"
-        href={"cadastroPaciente/controle"}
+        href={"cadastroPaciente/saidaDePacientes"}
       >
-        Saida de pacientes
+        Saída de pacientes
       </Link>
 
       <Link
         className="bg-blue-400 w-1/2 h-3/5 items-center justify-center flex rounded-lg text-white font-bold hover:bg-blue-500"
-        href={"cadastroPaciente/cadastro"}
+        href={"cadastroPaciente/entradaDePacientes"}
       >
-        Associar um novo leito
+        Entrada de pacientes
       </Link>
     </div>
   );

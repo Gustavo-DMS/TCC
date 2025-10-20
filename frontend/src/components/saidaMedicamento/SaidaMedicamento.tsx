@@ -18,7 +18,9 @@ import {
 } from "@/components/ui/alert-dialog";
 import ButtonSubmit from "../ButtonSubmit";
 import { useSession } from "next-auth/react";
-import { fetchAPIs } from "@/lib/utils";
+import { dataBRL, fetchAPIs } from "@/lib/utils";
+import { Label } from "../ui/label";
+import { Card } from "../ui/card";
 
 const schema = z.object({
   medicamento: z.coerce.number({ message: "Medicamento inválido" }),
@@ -91,7 +93,9 @@ export default function SaidaMedicamento({
         medicamentos.alert =
           "Parece que essa caixa está vazia. Verifique que está tentando usar a caixa correta.";
         inputRef.current?.blur();
-      } else if (medicamentos.medicamentos?.dt_vencimento < new Date()) {
+      } else if (
+        new Date(medicamentos.medicamentos?.d_vencimento) < new Date()
+      ) {
         setOpen(true);
         inputRef.current?.blur();
         medicamentos.alert =
@@ -145,125 +149,188 @@ export default function SaidaMedicamento({
   };
 
   return (
-    <div className="flex flex-col gap-10 mt-10 w-[210px]">
-      <AlertDialog onOpenChange={setOpen} open={open}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Ops! Parece que tem algo de errado
-            </AlertDialogTitle>
-          </AlertDialogHeader>
-          {debouncedValue?.alert}
-          <AlertDialogFooter>
-            <AlertDialogAction variant={"destructive"}>
-              Estou ciente
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-      <form className="flex flex-col gap-5">
+    <div className="flex flex-row p-5 rounded-lg justify-between mt-10">
+      <div className="flex flex-col gap-10  w-[210px]">
+        <AlertDialog onOpenChange={setOpen} open={open}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>
+                Ops! Parece que tem algo de errado
+              </AlertDialogTitle>
+            </AlertDialogHeader>
+            {debouncedValue?.alert}
+            <AlertDialogFooter>
+              <AlertDialogAction variant={"destructive"}>
+                Estou ciente
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+        <form className="flex flex-col gap-5">
+          <div>
+            <Label className="mb-2 text-white uppercase font-bold">
+              Código da caixa:
+            </Label>
+            <Input
+              className="bg-white"
+              onChange={(e) => {
+                setInputValue(e.target.value);
+                //@ts-ignore
+                form.setValue("medicamento", e.target.value);
+              }}
+              autoComplete="off"
+              ref={inputRef}
+            />
+            {form.formState.errors.medicamento && (
+              <p className="text-red-500">
+                {form.formState.errors.medicamento?.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label className="mb-2 text-white uppercase font-bold">
+              Quantidade Consumida:
+            </Label>
+            <Quantidade
+              formData={{ form, formField: "quantidade" }}
+              limite={debouncedValue?.medicamentos?.quantidade_atual || 100}
+            />
+            {form.formState.errors.quantidade && (
+              <p className="text-red-500">
+                {form.formState.errors.quantidade?.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label className="mb-2 text-white uppercase font-bold">
+              Funcionário Responsável:
+            </Label>
+            <VirtualizedCombobox
+              data={data["funcionarios"]}
+              displayFunc={(item: any) => item.nome}
+              filterFn={(value: string) =>
+                data.funcionarios.filter((item) =>
+                  item.nome.toLowerCase().includes(value.toLowerCase()),
+                )
+              }
+              chave="id"
+              formData={{ form, formField: "funcionario_responsavel" }}
+            />
+            {form.formState.errors.funcionario_responsavel && (
+              <p className="text-red-500">
+                {form.formState.errors.funcionario_responsavel?.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label className="mb-2 text-white uppercase font-bold">
+              Leito de Destino:
+            </Label>
+            <VirtualizedCombobox
+              data={data["leitos"]}
+              displayFunc={(item: any) => item.descricao}
+              filterFn={(value: string) =>
+                data.leitos.filter((item) =>
+                  item.descricao.toLowerCase().includes(value.toLowerCase()),
+                )
+              }
+              chave="id"
+              formData={{ form, formField: "leito" }}
+            />
+            {form.formState.errors.leito && (
+              <p className="text-red-500">
+                {form.formState.errors.leito?.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label className="mb-2 text-white uppercase font-bold">
+              Caixa Utilizada:
+            </Label>
+            <VirtualizedCombobox
+              chave="id"
+              filterFn={filterFn}
+              data={data["caixas"]}
+              displayFunc={(item: any) => item.descricao}
+              formData={{ form, formField: "caixa" }}
+            />
+            {form.formState.errors.caixa && (
+              <p className="text-red-500">
+                {form.formState.errors.caixa?.message}
+              </p>
+            )}
+          </div>
+          <ButtonSubmit onClick={form.handleSubmit(onSuccess, onError)} />
+        </form>
+      </div>
+      {debouncedValue?.error && (
         <div>
+          <p className="text-red-500">{debouncedValue.error}</p>
+        </div>
+      )}
+      <Card className="flex flex-col w-1/2 px-2 gap-5">
+        <h2 className="font-bold text-lg mx-auto">Informações da caixa</h2>
+        <div>
+          <Label className="mb-2 text-black uppercase font-bold">
+            Nome do medicamento:
+          </Label>
           <Input
-            onChange={(e) => {
-              setInputValue(e.target.value);
-              //@ts-ignore
-              form.setValue("medicamento", e.target.value);
-            }}
-            autoComplete="off"
-            ref={inputRef}
-          />
-          {debouncedValue?.error && (
-            <div>
-              <p className="text-red-500">{debouncedValue.error}</p>
-            </div>
-          )}
-          {debouncedValue?.medicamentos && (
-            <div className="text-white">
-              <p>
-                Medicamento: {debouncedValue.medicamentos?.medicamento_nome}
-              </p>
-              <p>
-                Quantidade atual:{" "}
-                {debouncedValue.medicamentos?.quantidade_atual}{" "}
-                {debouncedValue.medicamentos?.obs_qtde}
-              </p>
-              <p>
-                Data vencimento: {debouncedValue.medicamentos?.d_vencimento}
-              </p>
-              <p>
-                Data de registro: {debouncedValue.medicamentos?.dt_registro}
-              </p>
-            </div>
-          )}
-          {form.formState.errors.medicamento && (
-            <p className="text-red-500">
-              {form.formState.errors.medicamento?.message}
-            </p>
-          )}
-        </div>
-        <div>
-          <Quantidade
-            formData={{ form, formField: "quantidade" }}
-            limite={debouncedValue?.medicamentos?.quantidade_atual || 100}
-          />
-          {form.formState.errors.quantidade && (
-            <p className="text-red-500">
-              {form.formState.errors.quantidade?.message}
-            </p>
-          )}
-        </div>
-        <div>
-          <VirtualizedCombobox
-            data={data["funcionarios"]}
-            displayFunc={(item: any) => item.nome}
-            filterFn={(value: string) =>
-              data.funcionarios.filter((item) =>
-                item.nome.toLowerCase().includes(value.toLowerCase()),
-              )
+            className="text-black border-black border-2 shrink"
+            value={
+              debouncedValue?.medicamentos
+                ? debouncedValue?.medicamentos?.medicamento_nome
+                : "Nenhuma caixa selecionada"
             }
-            chave="id"
-            formData={{ form, formField: "funcionario_responsavel" }}
+            readOnly
+            inert
           />
-          {form.formState.errors.funcionario_responsavel && (
-            <p className="text-red-500">
-              {form.formState.errors.funcionario_responsavel?.message}
-            </p>
-          )}
         </div>
         <div>
-          <VirtualizedCombobox
-            data={data["leitos"]}
-            displayFunc={(item: any) => item.descricao}
-            filterFn={(value: string) =>
-              data.leitos.filter((item) =>
-                item.descricao.toLowerCase().includes(value.toLowerCase()),
-              )
+          <Label className="mb-2 text-black uppercase font-bold">
+            Quantidade Atual:
+          </Label>
+          <Input
+            className="text-black border-black border-2 shrink"
+            value={
+              debouncedValue?.medicamentos
+                ? `${debouncedValue?.medicamentos?.quantidade_atual} ${debouncedValue?.medicamentos?.obs_qtde}`
+                : "Nenhuma caixa selecionada"
             }
-            chave="id"
-            formData={{ form, formField: "leito" }}
+            readOnly
+            inert
           />
-          {form.formState.errors.leito && (
-            <p className="text-red-500">
-              {form.formState.errors.leito?.message}
-            </p>
-          )}
         </div>
         <div>
-          <VirtualizedCombobox
-            chave="id"
-            filterFn={filterFn}
-            data={data["caixas"]}
-            displayFunc={(item: any) => item.descricao}
-            formData={{ form, formField: "caixa" }}
+          <Label className="mb-2 text-black uppercase font-bold">
+            Data de vencimento:
+          </Label>
+          <Input
+            className="text-black border-black border-2 shrink"
+            value={
+              debouncedValue?.medicamentos
+                ? dataBRL(debouncedValue?.medicamentos?.d_vencimento, true)
+                : "Nenhuma caixa selecionada"
+            }
+            readOnly
+            inert
           />
-          {form.formState.errors.caixa && (
-            <p className="text-red-500">
-              {form.formState.errors.caixa?.message}
-            </p>
-          )}
         </div>
-        <ButtonSubmit onClick={form.handleSubmit(onSuccess, onError)} />
-      </form>
+        <div>
+          <Label className="mb-2 text-black uppercase font-bold">
+            Data de registro:
+          </Label>
+          <Input
+            className="text-black border-black border-2 shrink"
+            value={
+              debouncedValue?.medicamentos
+                ? dataBRL(debouncedValue?.medicamentos?.dt_registro)
+                : "Nenhuma caixa selecionada"
+            }
+            readOnly
+            inert
+          />
+        </div>
+      </Card>
     </div>
   );
 }

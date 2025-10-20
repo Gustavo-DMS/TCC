@@ -2,9 +2,8 @@
 import {
   pacientes_leitos,
   columns,
-} from "@/app/(paginas)/cadastroPaciente/controle/columns";
+} from "@/app/(paginas)/cadastroPaciente/saidaDePacientes/columns";
 import ButtonSubmit from "@/components/ButtonSubmit";
-import { openPdfAndPrint } from "@/components/cadastroFarmacos/FormCadastroFarmacos";
 import { DataTableForm } from "@/components/tabela/data-table-form";
 import { fetchAPIs } from "@/lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -51,7 +50,7 @@ export default function FormControlePacientes({
     toast.error("Erro ao enviar dados. Verifique os campos.");
   };
   return (
-    <div className="mt-10">
+    <div className="mt-10 flex flex-col gap-5">
       <Controller
         name={`id`}
         control={form.control}

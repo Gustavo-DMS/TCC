@@ -11,7 +11,7 @@ export default async function Page() {
           <Logs color="black" size={50} />
         </div>
         <p className="bg-[#254370] p-3 px-7 rounded-full text-white text-lg">
-          Saida de pacientes
+          Saída de Pacientes
         </p>
       </div>
       <FormControlePacientes data={data["data"]} />

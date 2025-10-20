@@ -1,12 +1,13 @@
 "use client";
 import { CadastroPaciente } from "@/types/cadastroPacientes";
 import { useForm } from "react-hook-form";
-import { ExampleCombobox } from "../Combobox";
+import { ExampleCombobox, VirtualizedCombobox } from "../Combobox";
 import ButtonSubmit from "../ButtonSubmit";
 import { toast } from "sonner";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { fetchAPIs } from "@/lib/utils";
+import { Label } from "../ui/label";
 
 const schema = z.object({
   leito: z.number({ message: "Selecione um leito" }).min(1),
@@ -45,19 +46,25 @@ export function FormCadastro({ data }: { data: CadastroPaciente }) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <ExampleCombobox
-        data={data["leitos"]}
-        chave="id"
-        value="descricao"
-        formData={{ formField: "leito", form: form }}
-      />
-      <ExampleCombobox
-        data={data["pacientes"]}
-        chave="id"
-        value="nome"
-        formData={{ formField: "paciente", form: form }}
-      />
+    <div className="flex flex-col gap-4 w-[210px] mt-10">
+      <div>
+        <Label className="mb-2 text-white uppercase font-bold">Leito:</Label>
+        <ExampleCombobox
+          data={data["leitos"]}
+          chave="id"
+          value="descricao"
+          formData={{ formField: "leito", form: form }}
+        />
+      </div>
+      <div>
+        <Label className="mb-2 text-white uppercase font-bold">Paciente:</Label>
+        <ExampleCombobox
+          data={data["pacientes"]}
+          chave="id"
+          value="nome"
+          formData={{ formField: "paciente", form: form }}
+        />
+      </div>
       <ButtonSubmit onClick={form.handleSubmit(onSuccess, onError)} />
     </div>
   );

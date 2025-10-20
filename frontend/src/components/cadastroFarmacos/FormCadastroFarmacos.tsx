@@ -72,7 +72,9 @@ export function FormCadastroFarmacos({
   return (
     <div className="flex flex-col gap-10 mt-10 w-[210px]">
       <div>
-        <Label className="mb-2">Escolha do fármaco</Label>
+        <Label className="mb-2 text-white uppercase font-bold">
+          Escolha do fármaco:
+        </Label>
         <VirtualizedCombobox
           // data={farmacos}
           chave="id"
@@ -95,12 +97,16 @@ export function FormCadastroFarmacos({
         )}
       </div>
       <div>
+        <Label className="mb-2 text-white uppercase font-bold">Lote:</Label>
         <Input {...form.register("lote")} autoComplete="off" />
         {form.formState.errors.lote && (
           <p className="text-red-500">{form.formState.errors.lote?.message}</p>
         )}
       </div>
       <div>
+        <Label className="mb-2 text-white uppercase font-bold">
+          Quantidade:
+        </Label>
         <Quantidade formData={{ form, formField: "quantidade" }} />
         {form.formState.errors.quantidade && (
           <p className="text-red-500">
@@ -109,6 +115,9 @@ export function FormCadastroFarmacos({
         )}
       </div>
       <div>
+        <Label className="mb-2 text-white uppercase font-bold">
+          Data de vencimento:
+        </Label>
         <Calendar28 formData={{ form, formField: "dt_vencimento" }} />
         {form.formState.errors.dt_vencimento && (
           <p className="text-red-500">

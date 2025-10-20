@@ -54,7 +54,7 @@ export function ExampleCombobox({
         <Command>
           <CommandInput placeholder={placeholder || "Faça uma busca..."} />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Nenhum resultado encontrado.</CommandEmpty>
             <CommandGroup>
               {data.map((item) => (
                 <CommandItem
@@ -140,7 +140,7 @@ export function VirtualizedCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="justify-between"
+          className="justify-between w-[210px]"
         >
           {valor !== ""
             ? displayFunc(data.find((item) => item[chave] === valor))

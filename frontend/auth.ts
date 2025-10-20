@@ -34,6 +34,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       authorize: async (credentials) => {
         console.log("credentials", credentials);
         let user = null;
+        console.log("Iniciando autorização");
+
         const res = await fetchAPIs(
           `/auth`,
           {
@@ -52,8 +54,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
         const getUser = await res.json();
         console.log("getUser", getUser[0]);
-        console.log("credentials.senha", credentials.senha);
-        console.log("senha banco", getUser[0].senha);
 
         if (
           (await bcrypt.compare(
@@ -65,7 +65,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           const { senha, ...resto } = getUser[0];
           user = resto;
 
-          console.log("ajui");
           // return user object with their profile data
           return user as any;
         } else {
@@ -82,12 +81,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         // User is available during sign-in
         token.id = parseInt(user.id!);
         token.nome = user.nome;
+        token.email = user.email;
       }
       return token;
     },
     session({ session, token }) {
       //@ts-ignore
       session.user.id = token.id;
+      session.user.nome = token.nome;
       return session;
     },
     authorized: async ({ auth }) => {
