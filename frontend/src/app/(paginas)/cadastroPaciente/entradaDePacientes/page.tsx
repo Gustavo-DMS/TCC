@@ -14,7 +14,7 @@ export default async function Page() {
           Entrada de pacientes
         </p>
       </div>
-      <FormCadastro data={data} />;
+      <FormCadastro data={data} />
     </main>
   );
 }

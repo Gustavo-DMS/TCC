@@ -140,7 +140,7 @@ export function VirtualizedCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="justify-between w-[210px]"
+          className="justify-between w-[210px] overflow-scroll"
         >
           {valor !== ""
             ? displayFunc(data.find((item) => item[chave] === valor))
