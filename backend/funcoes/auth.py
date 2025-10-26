@@ -1,6 +1,4 @@
 from flask import Blueprint, json, jsonify, request
-from dotenv import load_dotenv
-import os
 
 from utils.utils import fetch_db
 

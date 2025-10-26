@@ -1,10 +1,8 @@
 from datetime import datetime
 from flask import Blueprint, json, jsonify, request
-from dotenv import load_dotenv
-import os
 import psycopg
 from psycopg.rows import dict_row
-from utils.utils import fetch_db, manage_sensitive
+from utils.utils import manage_sensitive
 
 
 saida_medicamentos = Blueprint("saida_medicamentos", __name__)
@@ -23,6 +21,7 @@ def cadastro():
         or "caixa" not in body
         or "funcionario_responsavel" not in body
         or "funcionario_registro" not in body
+        or "id_terminal_origem" not in body
     ):
         return jsonify({"message": "Missing fields"}), 400
 
@@ -40,7 +39,7 @@ def cadastro():
         (
             body["medicamento"],
             body["funcionario_responsavel"],
-            1,
+            body["id_terminal_origem"],
             body["leito"],
             body["quantidade"],
             data,

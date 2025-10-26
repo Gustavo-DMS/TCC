@@ -31,6 +31,8 @@ const schema = z.object({
     message: "Selecione o funcionário responsável",
   }),
   funcionario_registro: z.number(),
+
+  id_terminal_origem: z.number(),
 });
 
 type schema = z.infer<typeof schema>;
@@ -64,6 +66,7 @@ export default function SaidaMedicamento({
     resolver: zodResolver(schema),
     defaultValues: {
       quantidade: 0,
+      id_terminal_origem: 1,
     },
   });
   const { data: session } = useSession();

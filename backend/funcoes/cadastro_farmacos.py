@@ -16,7 +16,7 @@ def resgate():
     conn = psycopg.connect(database_url, row_factory=dict_row)
     cur = conn.cursor()
     farmacos = cur.execute(
-        "SELECT id,nome,apresentacao FROM tb_medicamento WHERE ativo = true and qtde is not null"
+        "SELECT id,nome,apresentacao,cod_barras FROM tb_medicamento WHERE ativo = true and qtde is not null"
     ).fetchall()
     conn.close()
 

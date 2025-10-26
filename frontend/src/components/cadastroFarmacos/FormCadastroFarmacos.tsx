@@ -31,6 +31,7 @@ export function FormCadastroFarmacos({
     nome: string;
     cod_anvisa: number;
     apresentacao: string;
+    cod_barras: string;
   }[];
 }) {
   const form = useForm({
@@ -64,8 +65,10 @@ export function FormCadastroFarmacos({
   };
 
   const filterFn = (value: string) => {
-    return farmacos.filter((item) =>
-      item.nome.toLowerCase().includes(value.toLowerCase()),
+    return farmacos.filter(
+      (item) =>
+        item.nome.toLowerCase().includes(value.toLowerCase()) ||
+        item.cod_barras.includes(value),
     );
   };
 

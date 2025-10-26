@@ -42,7 +42,7 @@ export function ExampleCombobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="w-[210px] justify-between"
+          className="w-[210px] justify-between overflow-scroll"
         >
           {valor !== ""
             ? data.find((item) => item[chave] === valor)?.[value]
