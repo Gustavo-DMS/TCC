@@ -68,7 +68,7 @@ export function FormCadastroFarmacos({
     return farmacos.filter(
       (item) =>
         item.nome.toLowerCase().includes(value.toLowerCase()) ||
-        item.cod_barras.includes(value),
+        item.cod_barras?.toString().includes(value),
     );
   };
 

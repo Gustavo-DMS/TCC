@@ -1,5 +1,3 @@
-# pip install xlrd==2.0.1
-
 import pandas as pd
 import re
 import unicodedata
@@ -22,9 +20,10 @@ colunas = [
     "CLASSE TERAPÊUTICA",
     "TIPO DE PRODUTO (STATUS DO PRODUTO)",
     "PF Sem Impostos",
-    "TARJA"
+    "TARJA",
 ]
 df = df[colunas]
+
 
 # ----------------------------
 # Limpeza da coluna APRESENTAÇÃO
@@ -36,6 +35,7 @@ def remover_acentos(txt):
         return txt
     nfkd = unicodedata.normalize("NFKD", str(txt))
     return "".join([c for c in nfkd if not unicodedata.combining(c)])
+
 
 df["APRESENTAÇÃO"] = (
     df["APRESENTAÇÃO"]
@@ -49,9 +49,14 @@ df["APRESENTAÇÃO"] = (
 df_forma = pd.read_excel(file_forma_farm)
 df_via = pd.read_excel(file_via_adm)
 
+
 # Função para encontrar correspondências
 def encontrar_matches(texto, lista):
-    matches = [item for item in lista if pd.notna(item) and str(item).lower() in str(texto).lower()]
+    matches = [
+        item
+        for item in lista
+        if pd.notna(item) and str(item).lower() in str(texto).lower()
+    ]
     if not matches:
         return None
     # Ordena do maior para o menor (mais específico primeiro)
@@ -64,14 +69,18 @@ def encontrar_matches(texto, lista):
         resultado.append(atual)
     return "; ".join(resultado)
 
+
 # ----------------------------
 # Criar colunas FORMA_FARM e VIA_ADM
 # ----------------------------
 lista_formas = df_forma["ABREVIACAO"].dropna().unique().tolist()
 lista_vias = df_via["VIA_ADM"].dropna().unique().tolist()
 
-df["FORMA_FARM"] = df["APRESENTAÇÃO"].apply(lambda x: encontrar_matches(x, lista_formas))
+df["FORMA_FARM"] = df["APRESENTAÇÃO"].apply(
+    lambda x: encontrar_matches(x, lista_formas)
+)
 df["VIA_ADM"] = df["APRESENTAÇÃO"].apply(lambda x: encontrar_matches(x, lista_vias))
+
 
 # ----------------------------
 # Criar colunas QTDE e OBS_QTDE
@@ -81,10 +90,10 @@ def extrair_qtde_obs(texto):
         return None, None
     if " X " not in texto:
         return None, None
-    
+
     # Parte após " X "
     parte = texto.split(" X ", 1)[1].strip()
-    
+
     # Expressão regular: pega o primeiro número (pode ter vírgula ou ponto)
     match = re.match(r"([\d.,]+)(.*)", parte)
     if match:
@@ -98,10 +107,14 @@ def extrair_qtde_obs(texto):
         return qtde, obs
     return None, None
 
-df[["QTDE", "OBS_QTDE"]] = df["APRESENTAÇÃO"].apply(lambda x: pd.Series(extrair_qtde_obs(x)))
+
+df[["QTDE", "OBS_QTDE"]] = df["APRESENTAÇÃO"].apply(
+    lambda x: pd.Series(extrair_qtde_obs(x))
+)
 
 # Visualizar primeiras linhas do resultado
 print(df.head())
 
 # Se quiser salvar o resultado tratado em Excel:
 df.to_excel(r"D:\DESKTOP\TCC\medicamentos_tratados.xlsx", index=False)
+
